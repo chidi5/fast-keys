@@ -16,9 +16,12 @@ const SpeedCalculator = () => {
   ];
 
   const inputFieldRef = useRef<HTMLInputElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const errorAudioRef = useRef<HTMLAudioElement | null>(null);
+
   const [typingText, setTypingText] = useState<Array<React.ReactNode>>([]);
   const [inpFieldValue, setInpFieldValue] = useState("");
-  const maxTime = 60;
+  const maxTime = 25;
   const [timeLeft, setTimeLeft] = useState(maxTime);
   const [charIndex, setCharIndex] = useState(0);
   const [mistakes, setMistakes] = useState(0);
@@ -105,6 +108,11 @@ const SpeedCalculator = () => {
           characters[charIndex + 1].classList.add("active");
         characters[charIndex].classList.remove("active");
         characters[charIndex].classList.add("correct");
+        // Play the keyboard sound on correct key press
+        if (audioRef.current) {
+          audioRef.current.load();
+          audioRef.current.play();
+        }
       } else {
         setCharIndex(charIndex + 1);
         setMistakes(mistakes + 1);
@@ -112,6 +120,11 @@ const SpeedCalculator = () => {
         if (charIndex + 1 < characters.length)
           characters[charIndex + 1].classList.add("active");
         characters[charIndex].classList.add("wrong");
+        // Play the error sound on incorrect key press
+        if (errorAudioRef.current) {
+          errorAudioRef.current.load();
+          errorAudioRef.current.play();
+        }
       }
 
       if (charIndex === characters.length - 1) setIsTyping(false);
@@ -216,6 +229,13 @@ const SpeedCalculator = () => {
         CPM={CPM}
         reset={resetGame}
       />
+      {/* Include the audio element */}
+      <audio ref={audioRef} src="/sounds/keystroke.mp3" preload="auto"></audio>
+      <audio
+        ref={errorAudioRef}
+        src="/sounds/buzzer.mp3"
+        preload="auto"
+      ></audio>
     </Flex>
   );
 };
