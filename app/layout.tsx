@@ -2,8 +2,8 @@ import "@radix-ui/themes/styles.css";
 import "./theme-config.css";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Theme, ThemePanel } from "@radix-ui/themes";
-import { Inter, Poppins } from "next/font/google";
+import { Theme } from "@radix-ui/themes";
+import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
   subsets: ["latin"],
