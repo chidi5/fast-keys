@@ -4,6 +4,7 @@ import { Flex } from "@radix-ui/themes";
 import React, { useEffect, useRef, useState } from "react";
 import TypingArea from "./TypingArea";
 import "./SpeedTypingGame.css";
+import GameOver from "./GameOver";
 
 const SpeedCalculator = () => {
   const paragraphs: string | any[] = [
@@ -21,13 +22,14 @@ const SpeedCalculator = () => {
 
   const [typingText, setTypingText] = useState<Array<React.ReactNode>>([]);
   const [inpFieldValue, setInpFieldValue] = useState("");
-  const maxTime = 25;
+  const maxTime = 20;
   const [timeLeft, setTimeLeft] = useState(maxTime);
   const [charIndex, setCharIndex] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [WPM, setWPM] = useState(0);
   const [CPM, setCPM] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     loadParagraph();
@@ -55,6 +57,7 @@ const SpeedCalculator = () => {
         clearInterval(interval);
       }
       setIsTyping(false);
+      setGameOver(true);
     }
 
     return () => {
@@ -127,7 +130,10 @@ const SpeedCalculator = () => {
         }
       }
 
-      if (charIndex === characters.length - 1) setIsTyping(false);
+      if (charIndex === characters.length - 1) {
+        setIsTyping(false);
+        setGameOver(true);
+      }
 
       let wpm = Math.round(
         ((charIndex - mistakes) / 5 / (maxTime - timeLeft)) * 60
@@ -140,6 +146,7 @@ const SpeedCalculator = () => {
       setCPM(parseInt(cpm.toFixed(0), 10));
     } else {
       setIsTyping(false);
+      setGameOver(true);
     }
   };
 
@@ -218,6 +225,16 @@ const SpeedCalculator = () => {
         value={inpFieldValue}
         onInput={initTyping}
         onKeyDown={handleKeyDown}
+      />
+
+      {/* Gameover modal */}
+      <GameOver
+        mistake={mistakes}
+        WPM={WPM}
+        CPM={CPM}
+        open={gameOver}
+        setOpen={setGameOver}
+        reset={resetGame}
       />
 
       {/* Render the TypingArea child component */}

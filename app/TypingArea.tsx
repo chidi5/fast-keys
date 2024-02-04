@@ -1,6 +1,5 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from "@radix-ui/themes";
-import Link from "next/link";
 import React, { MouseEventHandler, ReactNode } from "react";
 
 interface Props {
